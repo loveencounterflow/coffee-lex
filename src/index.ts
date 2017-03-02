@@ -29,7 +29,8 @@ export default function lex(source: string): SourceTokenList {
       ...combinedLocationsForMultiwordOperators(pending, source)
     );
     location = pending.shift();
-    if (previousLocation && previousLocation.type !== SourceType.SPACE) {
+    // if (previousLocation && previousLocation.type !== SourceType.SPACE) {
+    if ( previousLocation ) {
       tokens.push(
         new SourceToken(
           previousLocation.type,
@@ -225,14 +226,14 @@ export function stream(source: string, index: number=0): () => SourceLocation {
             setType(SourceType.DOT);
           } else if (consume('"""')) {
             stringStack.push({
-              allowInterpolations: true,
+              allowInterpolations: false,
               endingDelimiter: '"""',
               endSourceType: SourceType.TDSTRING_END,
             });
             setType(SourceType.TDSTRING_START);
           } else if (consume('"')) {
             stringStack.push({
-              allowInterpolations: true,
+              allowInterpolations: false,
               endingDelimiter: '"',
               endSourceType: SourceType.DSTRING_END,
             });
@@ -257,7 +258,7 @@ export function stream(source: string, index: number=0): () => SourceLocation {
             setType(SourceType.COMMENT);
           } else if (consume('///')) {
             stringStack.push({
-              allowInterpolations: true,
+              allowInterpolations: false,
               endingDelimiter: '///',
               endSourceType: SourceType.HEREGEXP_END,
             });
@@ -271,39 +272,41 @@ export function stream(source: string, index: number=0): () => SourceLocation {
               setType(SourceType.LPAREN);
             }
           } else if (consume(')')) {
-            if (parenStack.length === 0) {
-              throw new Error(`unexpected ')' at ${start}`);
-            } else {
-              let lparen = parenStack.pop();
-              switch (lparen) {
-                case SourceType.LPAREN:
-                  setType(SourceType.RPAREN);
-                  break;
+            setType(SourceType.RPAREN);
+            // if (parenStack.length === 0) {
+            //   throw new Error(`unexpected ')' at ${start}`);
+            // } else {
+            //   let lparen = parenStack.pop();
+            //   switch (lparen) {
+            //     case SourceType.LPAREN:
+            //       setType(SourceType.RPAREN);
+            //       break;
 
-                case SourceType.CALL_START:
-                  setType(SourceType.CALL_END);
-                  break;
+            //     case SourceType.CALL_START:
+            //       setType(SourceType.CALL_END);
+            //       break;
 
-                default:
-                  throw new Error(
-                    `unexpected token type for '(' matching ')' at ${start}: ${lparen ? lparen.toString() : '??'}`
-                  );
-              }
-            }
+            //     default:
+            //       throw new Error(
+            //         `unexpected token type for '(' matching ')' at ${start}: ${lparen ? lparen.toString() : '??'}`
+            //       );
+            //   }
+            // }
           } else if (consume('[')) {
             setType(SourceType.LBRACKET);
           } else if (consume(']')) {
             setType(SourceType.RBRACKET);
           } else if (consume('{')) {
-            braceStack.push(start);
+            // braceStack.push(start);
             setType(SourceType.LBRACE);
           } else if (consume('}')) {
-            if (braceStack.length === 0) {
-              popInterpolation();
-            } else {
-              braceStack.pop();
-              setType(SourceType.RBRACE);
-            }
+            setType(SourceType.RBRACE);
+            // if (braceStack.length === 0) {
+            //   popInterpolation();
+            // } else {
+            //   braceStack.pop();
+            //   setType(SourceType.RBRACE);
+            // }
           } else if (consumeAny(['->', '=>'])) {
             setType(SourceType.FUNCTION);
           } else if (consumeRegexp()) {
@@ -546,12 +549,12 @@ export function stream(source: string, index: number=0): () => SourceLocation {
           break;
 
         case SourceType.EOF:
-          if (braceStack.length !== 0) {
-            throw new Error(
-              `unexpected EOF while looking for '}' to match '{' ` +
-              `at ${braceStack[braceStack.length - 1]}`
-            );
-          }
+          // if (braceStack.length !== 0) {
+          //   throw new Error(
+          //     `unexpected EOF while looking for '}' to match '{' ` +
+          //     `at ${braceStack[braceStack.length - 1]}`
+          //   );
+          // }
           if (stringStack.length !== 0) {
             throw new Error('unexpected EOF while parsing a string');
           }
@@ -649,12 +652,12 @@ export function stream(source: string, index: number=0): () => SourceLocation {
     braceStack = [];
   }
 
-  function popInterpolation() {
-    if (interpolationStack.length === 0) {
-      throw new Error(`unexpected '}' found in string at ${index}: ${JSON.stringify(source)}`);
-    }
-    setType(SourceType.INTERPOLATION_END);
-  }
+  // function popInterpolation() {
+  //   // if (interpolationStack.length === 0) {
+  //   //   throw new Error(`unexpected '}' found in string at ${index}: ${JSON.stringify(source)}`);
+  //   // }
+  //   // setType(SourceType.INTERPOLATION_END);
+  // }
 }
 
 export function consumeStream(lexer: () => SourceLocation): Array<SourceLocation> {

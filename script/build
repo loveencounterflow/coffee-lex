@@ -7,16 +7,16 @@ TSC="${TSC:-node_modules/.bin/tsc}"
 
 rm -rf "${DIST}"
 
-echo 'Building ES module version.'
-"${TSC}" \
-  --project . \
-  --outDir "${DIST}" \
-  --module ES2015 \
-  --moduleResolution node
+# echo 'Building ES module version.'
+# "${TSC}" \
+#   --project . \
+#   --outDir "${DIST}" \
+#   --module ES2015 \
+#   --moduleResolution node
 
-for js in $(find "${DIST}" -name '*.js'); do
-  mv "${js}" "$(dirname "${js}")/$(basename "${js}" .js).mjs"
-done
+# for js in $(find "${DIST}" -name '*.js'); do
+#   mv "${js}" "$(dirname "${js}")/$(basename "${js}" .js).mjs"
+# done
 
 echo 'Building CommonJS version.'
 "${TSC}" \
@@ -25,7 +25,8 @@ echo 'Building CommonJS version.'
   --module commonjs \
   --moduleResolution node
 
-# Restructure.
-rm -rf dist/test
-mv dist/src/* dist/
-rmdir dist/src
+echo "NOTE skipped test sources; modify tsconfig.json to include them"
+# # Restructure.
+# rm -rf dist/test
+# mv dist/src/* dist/
+# rmdir dist/src
