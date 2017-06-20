@@ -1,6 +1,7 @@
 {
-  "name": "coffee-lex",
-  "description": "Stupid lexer for CoffeeScript.",
+  "name": "stupid-coffee-lexer",
+  "description": "Stupid lexer for CoffeeScript. Forked from decaffeinate/coffee-lex, dumbed down a bit.",
+  "version": "0.7.0",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -15,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/decaffeinate/coffee-lex.git"
+    "url": "https://github.com/loveencounterflow/stupid-coffee-lexer.git"
   },
   "keywords": [
     "coffee",
@@ -29,9 +30,9 @@
   "author": "Brian Donovan <me@brian-donovan.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/decaffeinate/coffee-lex/issues"
+    "url": "https://github.com/loveencounterflow/stupid-coffee-lexer/issues"
   },
-  "homepage": "https://github.com/decaffeinate/coffee-lex",
+  "homepage": "https://github.com/loveencounterflow/stupid-coffee-lexer",
   "devDependencies": {
     "@types/mocha": "^2.2.37",
     "@types/node": "^7.0.0",
